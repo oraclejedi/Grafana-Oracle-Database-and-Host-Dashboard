@@ -1,6 +1,6 @@
 /*
 
-purge older records from the oracle/postgres metric tables
+purge older records from the oracle/postgres tables
 
 */
 
