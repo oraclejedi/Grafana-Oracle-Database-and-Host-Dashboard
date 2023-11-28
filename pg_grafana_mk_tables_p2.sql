@@ -34,7 +34,6 @@ create table if not exists ORA_OSSTATS(
   free_ram bigint not null
 );
 
-
 create table if not exists ORA_OSSTATS_DELTA(
   dbid varchar(50) not null,  
   inst_id varchar(50) not null,
@@ -51,5 +50,28 @@ create table if not exists ORA_OSSTATS_DELTA(
   load real not null,
   total_ram bigint not null,
   free_ram bigint not null
+);
+
+create table if not exists ORA_IOSTATS_FILE(
+  dbid varchar(50) not null,  
+  ts timestamptz not null,
+  small_read_reqs bigint not null,
+  small_write_reqs bigint not null,
+  large_read_reqs bigint not null,
+  large_write_reqs bigint not null,
+  small_read_megabytes bigint not null,
+  small_write_megabytes bigint not null,
+  large_read_megabytes bigint not null,
+  large_write_megabytes bigint not null
+);
+
+create table if not exists ORA_IOSTATS_FILE_DELTA(
+  dbid varchar(50) not null,
+  ts timestamptz not null,
+  elapsed real not null,
+  reads bigint not null,
+  writes bigint not null,
+  read_mb bigint not null,
+  write_mb bigint not null
 );
 

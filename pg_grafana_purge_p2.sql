@@ -12,4 +12,7 @@ delete from ora_osstats where ts::date <= current_date -1;
 
 delete from ora_osstats_delta where ts::date <= current_date -1;
 
+delete from ora_iostats_file where ts::date <= current_date -1;
+
+delete from ora_iostats_file_delta where ts::date <= current_date -1;
 
