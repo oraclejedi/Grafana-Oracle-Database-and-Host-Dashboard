@@ -1,5 +1,10 @@
 #!/bin/sh
 
+#
+# simple looping shell script to read performance data form Oracle and insert it into tables in PostgreSQL
+# this is used so that the free version of Grafana can read the data and create a dashboard
+#
+
 # connect string to Oracle
 export CSORA=soe/soe@mydb
 
