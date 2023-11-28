@@ -14,7 +14,7 @@ select
   sum(iof.small_read_megabytes)||','||
   sum(iof.small_write_megabytes)||','||
   sum(iof.large_read_megabytes)||','||
-  sum(iof.large_write_megabytes)||');' "-- postgres insert"
+  sum(iof.large_write_megabytes)||');' "-- postgresql insert"
 from
   v$database vdb,
   gv$iostat_file iof

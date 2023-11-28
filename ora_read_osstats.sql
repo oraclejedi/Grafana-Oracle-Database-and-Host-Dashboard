@@ -1,7 +1,6 @@
+
 --
--- called from read_ora_stats.ksh
---
--- reads the gv$osstat view and crafts a Postgres insert statement
+-- reads the gv$osstat view and crafts a PostgreSQL insert statement
 --
 
 set linesize 255
@@ -22,7 +21,7 @@ select
   greatest(0,h.value)||','||
   greatest(0,i.value)||','||
   greatest(0,j.value)||','||
-  greatest(0,k.value)||');' "-- postgres insert"
+  greatest(0,k.value)||');' "-- postgresql insert"
 from 
   v$database vdb,
   gv$osstat a,
