@@ -1,15 +1,13 @@
---
--- called from read_ora_stats.ksh
---
--- reads the gv$session view and craft a Postgres insert statement
---
 
+--
+-- reads the gv$session view and craft a PostgreSQL insert statement
+--
 
 select
   'insert into ORA_SESSIONS_NOTIME values('||
   vdb.dbid||','||
   gvs.inst_id||','||
-  count(*)||') on conflict ( dbid,inst_id ) do update set users='||count(*)||';' "-- pg cmd"
+  count(*)||') on conflict ( dbid,inst_id ) do update set users='||count(*)||';' "-- postgresql insert"
 from
   gv$session gvs,
   v$database vdb
@@ -19,7 +17,7 @@ union all
 select
   'insert into ORA_SESSIONS_NOTIME values('||
   vdb.dbid||','||
-  vt.thread#||',0) on conflict ( dbid,inst_id ) do update set users=0;' "-- pg cmd"
+  vt.thread#||',0) on conflict ( dbid,inst_id ) do update set users=0;' "-- postgresql insert"
 from
   v$thread vt,
   v$database vdb
