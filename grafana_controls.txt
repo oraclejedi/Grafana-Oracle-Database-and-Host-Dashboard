@@ -1,0 +1,95 @@
+
+The following are the SQL statements used in Grafana to drive the monitoring controls
+
+==========================
+
+Database Node Configuration
+
+Table / not time series
+
+with mystats as (
+SELECT
+  ts AS "time",
+  dbid,
+  inst_id,
+  sockets,
+  cores,
+  cpus,
+  total_ram/1048576/1024 as "total_ram_gb",
+  row_number() over (partition by DBID,INST_ID order by TS desc) as rnk
+FROM ora_osstats_delta
+)
+select
+  inst_id as "node",
+  sockets,
+  cores,
+  cpus, 
+  total_ram_gb
+from mystats 
+where rnk=1
+
+==========================
+
+Swingbench Connected Users
+
+table / not time series
+
+SELECT
+  inst_id as "Database Node", 
+  users as "Connected users"
+FROM ora_sessions_notime
+ORDER BY 1
+
+
+==========================
+
+
+Host 1(2) CPU Utilization
+
+Bar Gauge / Time Series
+
+SELECT
+  ts AS "time",
+  ((idl_val-iow_val)/greatest(1,(bsy_val+idl_val)))*100 as "PCT_IDL",
+  (sys_val/greatest(1,(idl_val+bsy_val)))*100 as "PCT_SYS",
+  (usr_val/greatest(1,(idl_val+bsy_val)))*100 as "PCT_USR",
+  (iow_val/greatest(1,(idl_val+bsy_val)))*100 as "PCT_IOW"
+FROM ora_osstats_delta
+WHERE
+  $__timeFilter(ts) AND
+  inst_id = '1'
+ORDER BY 1
+
+classic palette, no thresholds, max 100
+
+
+==========================
+
+
+Database Reads
+
+SELECT
+  ts AS "time",
+  reads/elapsed
+FROM ora_iostats_file_delta
+WHERE
+  $__timeFilter(ts)
+ORDER BY 1
+
+
+==========================
+
+Throughput
+
+Bar Gauge/Time Series
+
+
+SELECT
+  ts AS "time",
+  read_mb/elapsed "READ_MBS",
+  write_mb/elapsed "WRITE_MBS"
+FROM ora_iostats_file_delta
+WHERE
+  $__timeFilter(ts)
+ORDER BY 1
+
