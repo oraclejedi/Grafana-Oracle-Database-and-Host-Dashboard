@@ -8,18 +8,14 @@
 # connect string to Oracle
 export CSORA=soe/soe@mydb
 
-# connect string to PostgrSQL
+# connect string to PostgreSQL
 export CSPG="-h 192.168.0.1 -d mydb -U postgres"
 
 # oracle scripts to run - these will generate PostgreSQL insert statements
-export ORA1=ora_read_osstats
-export ORA2=ora_read_sessions_notime
-export ORA3=ora_read_iostats_file
-
-# names of the generated output files from the scripts above.
-export SP1=pg_insert_os.tmp
-export SP2=pg_insert_sessions_notime.tmp
-export SP3=pg_insert_io_file.tmp
+#export script_list="ora_read_osstats"
+#export script_list="ora_read_osstats ora_read_sessions_notime"
+#export script_list="ora_read_osstats ora_read_sessions_notime ora_read_instance_down"
+export script_list="ora_read_osstats ora_read_sessions_notime ora_read_iostats_file ora_read_instance_down"
 
 # PostgreSQL scripts to generate deltas and clean up
 export PG1=pg_grafana_mk_delta_p2
@@ -93,25 +89,20 @@ echo "process $$" >> orapg.lck
 while [[ -f orapg.lck ]]
 do
 
+  echo "--------------"
   echo "start of loop "
 
-  # read oracle os stats
-  ReadOracle $CSORA $SP1 $ORA1 "sql"
+  for script in ${script_list}
+  do
+    export output=`echo ${script}.out`
 
-  # read soe sessions
-  ReadOracle $CSORA $SP2 $ORA2 "sql"
+    echo "executing $script to generate output $output"
 
-  # read file io stats
-  ReadOracle $CSORA $SP3 $ORA3 "sql"
+    ReadOracle $CSORA $output $script "sql"
 
-  # write os stats to ora_osstats in postgres
-  WritePostgres "$CSPG" $SP1 "sql"
+    WritePostgres "$CSPG" $output "sql"
 
-  # write session data to ora_sessions
-  WritePostgres "$CSPG" $SP2 "sql"
-
-  # write iostats to ora_iostats_file
-  WritePostgres "$CSPG" $SP3 "sql"
+  done
 
   # generate the delta in postgres
   WritePostgres "$CSPG" $PG1 "sql"
@@ -126,4 +117,5 @@ done
 echo "script complete"
 
 exit 0;
+
 
