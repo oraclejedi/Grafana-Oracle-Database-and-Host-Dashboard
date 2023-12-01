@@ -1,6 +1,7 @@
 
 --
 -- reads the gv$iostat_file view and crafts a PostgreSQL insert statement
+-- reads the read and write io operations and throughput numbers and inserts them into ORA_IOSTATS_FILE
 --
 
 select

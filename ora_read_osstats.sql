@@ -1,6 +1,7 @@
 
 --
 -- reads the gv$osstat view and crafts a PostgreSQL insert statement
+-- reads the database host metrics and inserts them into ORA_OSSTATS
 --
 
 set linesize 255

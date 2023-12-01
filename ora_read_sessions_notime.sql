@@ -1,6 +1,7 @@
 
 --
 -- reads the gv$session view and craft a PostgreSQL insert statement
+-- reads the active SOE (Swingbench) sessions in the database and inserts the data into ORA_SESSIONS_NOTIME
 --
 
 select
